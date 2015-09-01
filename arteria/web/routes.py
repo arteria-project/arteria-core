@@ -2,7 +2,6 @@ import threading
 import re
 import itertools
 from tornado.web import URLSpec
-import logging as log
 
 class RouteInfo:
     """Information about a method in a route"""
