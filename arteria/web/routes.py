@@ -1,7 +1,7 @@
 import threading
 import re
 import itertools
-
+from tornado.web import URLSpec
 
 class RouteInfo:
     """Information about a method in a route"""
@@ -50,12 +50,19 @@ class RouteService:
 
         Returns nothing if no documentation is found.
         """
+
         if tornado_routes is None:
             raise RoutesNotSetError("Routes must be set before RouteInfos can be generated")
 
         for tornado_route in tornado_routes:
-            route = tornado_route[0]
-            cls = tornado_route[1]
+
+            if isinstance(tornado_route, URLSpec):
+                route = tornado_route.regex.pattern
+                cls = tornado_route.handler_class
+            else:
+                route = tornado_route[0]
+                cls = tornado_route[1]
+
             for method_name in "get", "post", "put", "delete":
                 doc = self._doc_string_from_class_attribute(cls, method_name)
                 if doc is not None:
