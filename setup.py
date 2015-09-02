@@ -11,6 +11,11 @@ setup(
     description="Helper classes for the arteria project",
     long_description=read_file('README'),
     keywords='bioinformatics',
+    install_requires=[
+        'tornado==4.2.1', 
+        'PyYAML==3.11', 
+        'requests==2.7.0'
+        ],
     author='SNP&SEQ Technology Platform, Uppsala University',
     packages=find_packages(),
     include_package_data=True
