@@ -71,8 +71,8 @@ class AppService:
                                [--configroot path]
 
         These config files should be accessible:
-            - /opt/<product_name>/app.config
-            - /opt/<product_name>/logger.config
+            - /etc/arteria/<product_name>/app.config
+            - /etc/arteria/<product_name>/logger.config
 
         You can override this by supplying config_root, in which case they should be
         found at <config_root>/*.config
@@ -95,7 +95,7 @@ class AppService:
             raise ProductNameError(
                 "No product name was supplied via the command line or as an argument to create")
 
-        config_root = options.configroot or os.path.join("/opt", product_name, "etc")
+        config_root = options.configroot or os.path.join("/etc", "arteria", product_name)
         logger_config_path = os.path.join(config_root, "logger.config")
         app_config_path = os.path.join(config_root, "app.config")
         config_svc = ConfigurationService(logger_config_path=logger_config_path,
