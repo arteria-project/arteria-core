@@ -8,7 +8,7 @@ class BaseRestHandler(tornado.web.RequestHandler):
     """
 
     def data_received(self, chunk):
-        pass
+        raise NotImplementedError("Should be implemented by subclass!")
 
     def write_object(self, obj):
         resp = jsonpickle.encode(obj, unpicklable=False)
