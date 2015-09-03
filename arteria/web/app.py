@@ -71,8 +71,8 @@ class AppService:
                                [--configroot path]
 
         These config files should be accessible:
-            - /opt/<product_name>/app.config
-            - /opt/<product_name>/logger.config
+            - /etc/arteria/<product_name>/app.config
+            - /etc/arteria/<product_name>/logger.config
 
         You can override this by supplying config_root, in which case they should be
         found at <config_root>/*.config
