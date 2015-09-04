@@ -84,7 +84,7 @@ class AppService:
 
         parser = OptionParser()
         parser.add_option("--product", dest="product", metavar="PRODUCT")
-        parser.add_option("--port", dest="port", metavar="PORT")
+        parser.add_option("--port", dest="port", metavar="PORT", required=True)
         parser.add_option("--debug", dest="debug", action="store_true", default=False)
         parser.add_option("--configroot", dest="configroot", metavar="CONFIGROOT")
         (options, args) = parser.parse_args()
