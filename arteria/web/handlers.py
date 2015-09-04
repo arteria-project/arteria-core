@@ -11,8 +11,20 @@ class BaseRestHandler(tornado.web.RequestHandler):
         pass
 
     def write_object(self, obj):
-        resp = jsonpickle.encode(obj, unpicklable=False)
-        self.write_json(resp)
+        """
+        Writes the object as JSON
+
+        Only dictionaries or objects containing the __dict__ attribute get serialized.
+        """
+        if isinstance(obj, dict):
+            resp = obj
+        elif hasattr(obj, "__dict__"):
+            resp = obj.__dict__
+        else:
+            raise TypeError("The object needs either to be a dict or have the __dict__ attribute")
+
+        # Send to Tornado, which handles the json serialization and content-type header
+        self.write(resp)
 
     def write_json(self, json):
         self.set_header("Content-Type", "application/json")
@@ -64,3 +76,5 @@ class ApiHelpHandler(BaseRestHandler):
         base_url = "{0}://{1}".format(self.request.protocol, self.request.host)
         help_doc = self.route_svc.get_help(base_url)
         self.write_object(help_doc)
+
+
