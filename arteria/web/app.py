@@ -43,9 +43,10 @@ class AppService:
         self.route_svc = RouteService(self, debug)
         self._debug = debug
 
-        if not port or (not type(port) is int):
-            raise InvalidPortError("Invalid port: '{port}'".format(port=port))
-        self._port = port
+        try:
+            self._port = int(port)
+        except ValueError:
+            raise InvalidPortError("Invalid port: '{port}'. Could not be cast to int.".format(port=port))
 
         # Initialize the logger configuration:
         self._logger_config = config_svc.get_logger_config()
@@ -83,7 +84,7 @@ class AppService:
 
         parser = OptionParser()
         parser.add_option("--product", dest="product", metavar="PRODUCT")
-        parser.add_option("--port", dest="port", metavar="PORT")
+        parser.add_option("--port", dest="port", metavar="PORT", required=True)
         parser.add_option("--debug", dest="debug", action="store_true", default=False)
         parser.add_option("--configroot", dest="configroot", metavar="CONFIGROOT")
         (options, args) = parser.parse_args()
@@ -100,7 +101,7 @@ class AppService:
         app_config_path = os.path.join(config_root, "app.config")
         config_svc = ConfigurationService(logger_config_path=logger_config_path,
                                           app_config_path=app_config_path)
-        app_svc = AppService(config_svc, options.debug, int(options.port))
+        app_svc = AppService(config_svc, options.debug, options.port)
         return app_svc
 
     def start(self, routes):
