@@ -84,13 +84,16 @@ class AppService:
 
         parser = OptionParser()
         parser.add_option("--product", dest="product", metavar="PRODUCT")
-        parser.add_option("--port", dest="port", metavar="PORT", required=True)
+        parser.add_option("--port", dest="port", metavar="PORT")
         parser.add_option("--debug", dest="debug", action="store_true", default=False)
         parser.add_option("--configroot", dest="configroot", metavar="CONFIGROOT")
         (options, args) = parser.parse_args()
 
         if options.product:
             product_name = options.product
+
+        if not options.port:
+            parser.error("You have to specify a port.")
 
         if not product_name:
             raise ProductNameError(
