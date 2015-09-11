@@ -120,7 +120,7 @@ class RouteService:
                 if not self._help_generated:
                     self._route_infos = self._get_route_infos_grouped(self._routes, base_url)
                     self._help_generated = True
-        return self._route_infos
+        return {"doc": self._route_infos}
 
 class RoutesNotSetError(Exception):
     pass
