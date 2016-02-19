@@ -1,6 +1,7 @@
 import tornado.web
 import jsonpickle
 
+
 class BaseRestHandler(tornado.web.RequestHandler):
     """
     A request handler for a REST web interface, taking care of
@@ -41,6 +42,14 @@ class BaseRestHandler(tornado.web.RequestHandler):
     def api_link(self, version="1.0"):
         return "%s://%s/api/%s" % (self.request.protocol, self.request.host, version)
 
+    def write_error(self, status_code, **kwargs):
+        if "exc_info" in kwargs:
+            reason = kwargs["exc_info"][1].message
+        else:
+            reason = "Unknown error internal server error"
+        self.set_status(500, reason)
+
+
 class LogLevelHandler(BaseRestHandler):
     """
     Handles getting/setting the log_level of the running application
@@ -63,6 +72,7 @@ class LogLevelHandler(BaseRestHandler):
         log_level = json_body["log_level"]
         self.app_svc.set_log_level(log_level)
         self.write_object({"log_level": log_level})
+
 
 class ApiHelpHandler(BaseRestHandler):
     """
