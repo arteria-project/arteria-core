@@ -47,20 +47,3 @@ class TestHandlersSerialization(unittest.TestCase):
 class SerializeMe:
     pass
 
-
-class TestHandler(AsyncHTTPSTestCase):
-
-    class BaseRestHandlerWithError(BaseRestHandler):
-        def get(self):
-            raise Exception("This is a neat little exception!")
-
-    def get_app(self):
-        return Application([url(r"/test", self.BaseRestHandlerWithError)])
-
-    def test_error_message_should_be_returned(self):
-        response = self.fetch("/test")
-        self.assertEqual(response.code, 500)
-        self.assertEqual(response.reason, "This is a neat little exception!")
-        print(response)
-
-

@@ -42,14 +42,6 @@ class BaseRestHandler(tornado.web.RequestHandler):
     def api_link(self, version="1.0"):
         return "%s://%s/api/%s" % (self.request.protocol, self.request.host, version)
 
-    def write_error(self, status_code, **kwargs):
-        if "exc_info" in kwargs:
-            reason = kwargs["exc_info"][1].message
-        else:
-            reason = "Unknown internal server error"
-        self.set_status(500, reason)
-
-
 class LogLevelHandler(BaseRestHandler):
     """
     Handles getting/setting the log_level of the running application
