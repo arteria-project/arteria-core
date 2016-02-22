@@ -13,7 +13,7 @@ class RoutesServiceTest(TestCase):
         ]
         route_svc.set_routes(routes)
         base_url = "http://self"
-        help = route_svc.get_help(base_url)
+        help = route_svc.get_help(base_url).get("doc")
         self.assertEqual(len(help), len(routes))
 
         for index, entry in enumerate(help):
