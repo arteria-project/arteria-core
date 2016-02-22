@@ -46,7 +46,7 @@ class BaseRestHandler(tornado.web.RequestHandler):
         if "exc_info" in kwargs:
             reason = kwargs["exc_info"][1].message
         else:
-            reason = "Unknown error internal server error"
+            reason = "Unknown internal server error"
         self.set_status(500, reason)
 
 
