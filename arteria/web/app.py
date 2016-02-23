@@ -57,7 +57,7 @@ class AppService:
         self._tornado = None
 
     @staticmethod
-    def create(product_name=None):
+    def create(product_name=None, config_root=None):
         """
         Creates the default app service based on arguments sent from the command line
         and related services with defaults based on the product_name.
@@ -92,19 +92,29 @@ class AppService:
         if options.product:
             product_name = options.product
 
-        if not options.port:
-            parser.error("You have to specify a port.")
-
         if not product_name:
             raise ProductNameError(
                 "No product name was supplied via the command line or as an argument to create")
 
-        config_root = options.configroot or os.path.join("/etc", "arteria", product_name)
+        if not config_root:
+            config_root = options.configroot or os.path.join("/etc", "arteria", product_name)
+
         logger_config_path = os.path.join(config_root, "logger.config")
         app_config_path = os.path.join(config_root, "app.config")
         config_svc = ConfigurationService(logger_config_path=logger_config_path,
                                           app_config_path=app_config_path)
-        app_svc = AppService(config_svc, options.debug, options.port)
+
+        # Port from commandline should override,
+        # otherwise pick the port specified in the
+        # config.
+        if options.port:
+            port = options.port
+        elif config_svc["port"]:
+            port = config_svc["port"]
+        else:
+            parser.error("You have to specify a port, either via the commandline, or in the config (key: 'port').")
+
+        app_svc = AppService(config_svc, options.debug, port)
         return app_svc
 
     def start(self, routes):

@@ -1,6 +1,7 @@
 import tornado.web
 import jsonpickle
 
+
 class BaseRestHandler(tornado.web.RequestHandler):
     """
     A request handler for a REST web interface, taking care of
@@ -63,6 +64,7 @@ class LogLevelHandler(BaseRestHandler):
         log_level = json_body["log_level"]
         self.app_svc.set_log_level(log_level)
         self.write_object({"log_level": log_level})
+
 
 class ApiHelpHandler(BaseRestHandler):
     """

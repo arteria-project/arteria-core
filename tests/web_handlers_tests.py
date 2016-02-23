@@ -1,9 +1,16 @@
-from arteria.web.handlers import BaseRestHandler
+
 import unittest
 import mock
 
+from tornado.testing import AsyncHTTPSTestCase
+from tornado.web import Application
+from tornado.web import URLSpec as url
 
-class TestHandlers(unittest.TestCase):
+from arteria.web.handlers import BaseRestHandler
+
+
+
+class TestHandlersSerialization(unittest.TestCase):
     def test_cant_deserialize_list(self):
         """
         It shouldn't be possible to deserialize to json lists:
@@ -39,3 +46,4 @@ class TestHandlers(unittest.TestCase):
 
 class SerializeMe:
     pass
+
