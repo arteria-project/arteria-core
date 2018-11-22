@@ -1,6 +1,5 @@
 import tornado.web
-import jsonpickle
-
+import json
 
 class BaseRestHandler(tornado.web.RequestHandler):
     """
@@ -33,7 +32,7 @@ class BaseRestHandler(tornado.web.RequestHandler):
 
     def body_as_object(self, required_members=[]):
         """Returns the JSON encoded body as a Python object"""
-        obj = jsonpickle.decode(self.request.body)
+        obj = json.loads(self.request.body)
         for member in required_members:
             if member not in obj:
                 raise tornado.web.HTTPError("400", "Expecting '{0}' in the JSON body".format(member))

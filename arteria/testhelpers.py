@@ -1,8 +1,10 @@
 import time
-import jsonpickle
 import requests
 import re
+import json
+
 import unittest
+
 
 class BaseRestTest(unittest.TestCase):
     def _base_url(self):
@@ -24,9 +26,9 @@ class BaseRestTest(unittest.TestCase):
         :param obj: A Python object
         :param expect: The expected status code
         """
-        json = jsonpickle.encode(obj)
+        json_body = json.dumps(obj)
         full_url = self._get_full_url(url)
-        resp = requests.put(full_url, json)
+        resp = requests.put(full_url, json_body)
         self._validate_response(resp, expect)
         return resp
 
