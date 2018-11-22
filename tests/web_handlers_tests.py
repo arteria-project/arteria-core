@@ -7,7 +7,7 @@ from tornado.web import Application
 from tornado.web import URLSpec as url
 
 from arteria.web.handlers import BaseRestHandler
-
+import json
 
 
 class TestHandlersSerialization(unittest.TestCase):
@@ -27,16 +27,16 @@ class TestHandlersSerialization(unittest.TestCase):
         obj = SerializeMe()
         obj.key = "value"
         handler.write_object(obj)
-        json = handler._write_buffer[0]
-        self.assertTrue(json == '{"key": "value"}')
+        res = json.loads(handler._write_buffer[0])
+        self.assertDictEqual(res, {"key": "value"})
 
     def test_can_deserialize_dict(self):
         handler = BaseRestHandler(mock.MagicMock(), mock.MagicMock())
         handler._write_buffer = []
         obj = {"key": "value"}
         handler.write_object(obj)
-        json = handler._write_buffer[0]
-        self.assertTrue(json == '{"key": "value"}')
+        res = json.loads(handler._write_buffer[0])
+        self.assertDictEqual(res, {"key": "value"})
 
     def test_cant_deserialize_tuple(self):
         handler = BaseRestHandler(mock.MagicMock(), mock.MagicMock())
