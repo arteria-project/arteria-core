@@ -12,9 +12,9 @@ setup(
     long_description=read_file('README'),
     keywords='bioinformatics',
     install_requires=[
-        'tornado==4.2.1', 
-        'PyYAML==3.11', 
-        'requests==2.7.0'
+        'tornado>=4.2.1',
+        'PyYAML>=3.13',
+        'requests>=2.20.0'
         ],
     author='SNP&SEQ Technology Platform, Uppsala University',
     packages=find_packages(),

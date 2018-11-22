@@ -1,13 +1,17 @@
+sudo: false
+
 language: python
 
 python:
     - "2.7"
+    - "3.6"
 
 install:
+    - pip install tox-travis
     - pip install -e . -r ./requirements/dev 
 
 script:
-    - nosetests tests/
+    - tox
 
 notifications:
     email: false

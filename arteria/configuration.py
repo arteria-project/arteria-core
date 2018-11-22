@@ -58,5 +58,5 @@ class ConfigurationService:
     def read_yaml(path):
         """Deserializes the content of the yaml file"""
         with open(path, 'r') as f:
-            config = yaml.load(f.read())
+            config = yaml.safe_load(f.read())
             return config
