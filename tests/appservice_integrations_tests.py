@@ -18,3 +18,11 @@ class AppServiceTest(TestCase):
 
         self.assertEquals(app_config["port"], 10000)
         self.assertEquals(logger_config["version"], 1)
+
+    def test_can_use_args(self):
+        app_svc = AppService.create(
+                product_name="arteria-test",
+                config_root="{}/../templates/".format(self.this_file_path),
+                args=['--port', '1234'])
+
+        self.assertEquals(app_svc._port, 1234)
