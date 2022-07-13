@@ -5,7 +5,7 @@ import os
 from arteria.configuration import ConfigurationService
 from arteria.web.routes import RouteService
 from arteria.web.handlers import LogLevelHandler, ApiHelpHandler
-from optparse import OptionParser
+from argparse import ArgumentParser
 
 
 class AppService:
@@ -56,11 +56,12 @@ class AppService:
         self._logger.info("Logger initialized by AppService")
         self._tornado = None
 
-    @staticmethod
-    def create(product_name=None, config_root=None):
+    @classmethod
+    def create(cls, product_name=None, config_root=None, args=None):
         """
-        Creates the default app service based on arguments sent from the command line
-        and related services with defaults based on the product_name.
+        Creates the default app service based on arguments sent from the
+        command line and related services with defaults based on the
+        product_name.
 
         If the product_name is specified via the command line, it will override
         the argument.
@@ -75,47 +76,61 @@ class AppService:
             - /etc/arteria/<product_name>/app.config
             - /etc/arteria/<product_name>/logger.config
 
-        You can override this by supplying config_root, in which case they should be
-        found at <config_root>/*.config
+        You can override this by supplying config_root, in which case they
+        should be found at <config_root>/*.config
 
-        :param product_name: Should by convention be __package__. This value can be overriden
-                             by supplying the --product parameter on the command line.
+        :param product_name: Should by convention be __package__. This value
+        can be overriden by supplying the --product parameter on the command
+        line.
         """
 
-        parser = OptionParser()
-        parser.add_option("--product", dest="product", metavar="PRODUCT")
-        parser.add_option("--port", dest="port", metavar="PORT")
-        parser.add_option("--debug", dest="debug", action="store_true", default=False)
-        parser.add_option("--configroot", dest="configroot", metavar="CONFIGROOT")
-        (options, args) = parser.parse_args()
+        parser = ArgumentParser()
+        parser.add_argument(
+                "--product",
+                dest="product", metavar="PRODUCT")
+        parser.add_argument(
+                "--port",
+                dest="port", metavar="PORT")
+        parser.add_argument(
+                "--configroot",
+                dest="configroot", metavar="CONFIGROOT")
+        parser.add_argument(
+                "--debug",
+                dest="debug", action="store_true", default=False)
+        args = parser.parse_args(args=args)
 
-        if options.product:
-            product_name = options.product
+        if args.product:
+            product_name = args.product
 
         if not product_name:
             raise ProductNameError(
-                "No product name was supplied via the command line or as an argument to create")
+                "No product name was supplied via the command line"
+                " or as an argument to create")
 
         if not config_root:
-            config_root = options.configroot or os.path.join("/etc", "arteria", product_name)
+            config_root = (
+                    args.configroot
+                    or os.path.join("/etc", "arteria", product_name)
+                    )
 
         logger_config_path = os.path.join(config_root, "logger.config")
         app_config_path = os.path.join(config_root, "app.config")
-        config_svc = ConfigurationService(logger_config_path=logger_config_path,
-                                          app_config_path=app_config_path)
+        config_svc = ConfigurationService(
+                logger_config_path=logger_config_path,
+                app_config_path=app_config_path)
 
         # Port from commandline should override,
-        # otherwise pick the port specified in the
-        # config.
-        if options.port:
-            port = options.port
+        # otherwise pick the port specified in the config.
+        if args.port:
+            port = args.port
         elif config_svc["port"]:
             port = config_svc["port"]
         else:
-            parser.error("You have to specify a port, either via the commandline, or in the config (key: 'port').")
+            parser.error(
+                    "You have to specify a port, either via the commandline,"
+                    " or in the config (key: 'port').")
 
-        app_svc = AppService(config_svc, options.debug, port)
-        return app_svc
+        return cls(config_svc, args.debug, port)
 
     def start(self, routes):
         # Add the default routes, such as the API handler
