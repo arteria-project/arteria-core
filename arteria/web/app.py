@@ -56,8 +56,8 @@ class AppService:
         self._logger.info("Logger initialized by AppService")
         self._tornado = None
 
-    @staticmethod
-    def create(product_name=None, config_root=None):
+    @classmethod
+    def create(cls, product_name=None, config_root=None):
         """
         Creates the default app service based on arguments sent from the command line
         and related services with defaults based on the product_name.
@@ -114,8 +114,7 @@ class AppService:
         else:
             parser.error("You have to specify a port, either via the commandline, or in the config (key: 'port').")
 
-        app_svc = AppService(config_svc, args.debug, port)
-        return app_svc
+        return cls(config_svc, args.debug, port)
 
     def start(self, routes):
         # Add the default routes, such as the API handler
