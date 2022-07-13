@@ -44,7 +44,7 @@ class BaseRestTest(unittest.TestCase):
         resp = requests.get(full_url)
         self._validate_response(resp, expect)
         try:
-            resp.body_obj = jsonpickle.decode(resp.text)
+            resp.body_obj = json.loads(resp.text)
         except ValueError:
             resp.body_obj = None
         return resp
