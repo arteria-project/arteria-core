@@ -57,7 +57,7 @@ class AppService:
         self._tornado = None
 
     @classmethod
-    def create(cls, product_name=None, config_root=None):
+    def create(cls, product_name=None, config_root=None, args=None):
         """
         Creates the default app service based on arguments sent from the
         command line and related services with defaults based on the
@@ -97,7 +97,7 @@ class AppService:
         parser.add_argument(
                 "--debug",
                 dest="debug", action="store_true", default=False)
-        args = parser.parse_args()
+        args = parser.parse_args(args=args)
 
         if args.product:
             product_name = args.product
